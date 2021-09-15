@@ -15,11 +15,7 @@
             </v-col>
             <v-col cols="12"
                    md="1">
-              <v-btn v-on:click="add">추가</v-btn>
-            </v-col>
-            <v-col cols="12"
-                   md="1">
-              <v-btn>삭제</v-btn>
+              <v-btn v-on:click="submit">적용</v-btn>
             </v-col>
             <v-col cols="12"
                    md="1">
@@ -30,27 +26,52 @@
 
       </v-flex>
 
-      <v-flex v-if="mine.like.length>0 || mine.dislike.length>0" :style="{'marginTop': '50px'}" justify="center">
-        <a>좋아하는 음식 :  </a>
-        <span :key=i.like v-for="i in mine.like">{{i}}  </span>
-        <v-spacer></v-spacer>
-        <a>싫어하는 음식 :  </a>
-        <span :key=i.dislike v-for="i in mine.dislike">{{i}}  </span>
+      <v-flex v-if="likes.length>0 || dislikes.length>0" :style="{'marginTop': '50px'}">
+        <v-row dense justify="center" align="center">
+          <v-col cols="10"
+                 md="4" class="text-subtitle-1 text-center">
+            <h3>좋아하는 음식</h3>
+            <a :key=i v-for="i in likes"> {{i}} </a>
+          </v-col>
+          <v-col cols="10"
+                 md="4" class="text-subtitle-1 text-center">
+            <h3>싫어하는 음식</h3>
+            <a :key=i v-for="i in dislikes"> {{i}} </a>
+          </v-col>
+        </v-row>
+
       </v-flex>
 
-
       <v-flex :style="{'marginTop': '50px'}" justify="center">
+
         <v-row dense justify="center" align="base">
           <v-card :key= item.id v-for="item in items"  width="80%">
             <v-list-item>
-              <v-list-item-action>
-                <v-checkbox/>
-              </v-list-item-action>
+              <v-col cols="12"
+                md="2" class="text-center">
+                <v-list-item-title>{{item.id}}</v-list-item-title>
+              </v-col>
+
+              <v-col cols="12"
+                     md="4" class="text-center">
+                <v-list-item-action :style="{'width':'100%'}">
+                  <v-row justify="center">
+                    <v-col>
+                      <input type="checkbox" v-model="like_check" :value="item.id" > like
+                    </v-col>
+                    <v-col>
+                      <input type="checkbox" v-model="dislike_check" :value="item.id"> dislike
+                    </v-col>
+                  </v-row>
+                </v-list-item-action>
+              </v-col>
+
+              <v-col cols="12"
+                     md="6" class="text-center">
+                <v-list-item-title>{{item.food}}</v-list-item-title>
+              </v-col>
+
             </v-list-item>
-            <v-card-text>
-              <a>{{item.id}}</a>
-              <a>{{item.food}}</a>
-            </v-card-text>
           </v-card>
         </v-row>
       </v-flex>
@@ -64,37 +85,44 @@ import axios from 'axios'
     name: 'Home',
     data: ()=>({
       name: '',
+      likes: [],
+      dislikes: [],
+      like_check: [],
+      dislike_check: [],
       items: [],
-      mine: {
-        like : [],
-        dislike : []
-      },
+      mine: [],
       checked : []
     }),
     methods : {
       getMine() {
         //var vm = this;
         axios.get('/menu/userinfo?name='+this.name).then(res =>{
-          let like_ = []
-          let dis_ = []
+          console.log(res.data);
+          this.likes = new Array
+          this.dislikes = new Array
+          this.like_check = new Array
+          this.dislike_check = new Array
+
           for(let i=0; i<res.data.like.length; i++){
-            like_.push(res.data.like[i].food);
+            this.likes.push(res.data.like[i].food);
+            this.like_check.push(res.data.like[i].id);
           }
           for(let i=0; i<res.data.dislike.length; i++){
-            dis_.push(res.data.dislike[i].food);
+            this.dislikes.push(res.data.dislike[i].food);
+            this.dislike_check.push(res.data.dislike[i].id);
           }
-
-          this.$set(this.mine, 'like', like_);
-          this.$set(this.mine, 'dislike', dis_);
         });
       },
-      add() {
-        console.log(this.checked);
+      submit() {
+        axios.post()
+        console.log(this.like_check);
       }
     },
     created() {
       axios.get('/menu').then(res => {
-        this.items = res.data
+        for(let i=0; i<res.data.length; i++){
+          this.items.push(res.data[i]);
+        }
       }).catch(err=>{
         console.log(err);
       })
