@@ -42,7 +42,7 @@
 
       </v-flex>
 
-      <v-flex :style="{'marginTop': '50px'}" justify="center">
+      <v-flex :style="{'marginTop': '50px', 'marginBottom': '50px'}" justify="center">
 
         <v-row dense justify="center" align="base">
           <v-card :key= item.id v-for="item in items"  width="80%">
@@ -95,11 +95,12 @@ import axios from 'axios'
     }),
     methods : {
       getMine() {
-        //var vm = this;
         axios.get('/menu/userinfo?name='+this.name).then(res =>{
-          console.log(res.data);
+          /* 음식 이름 */
           this.likes = new Array
           this.dislikes = new Array
+
+          /* 음식 아이디로 체크 */
           this.like_check = new Array
           this.dislike_check = new Array
 
@@ -114,8 +115,7 @@ import axios from 'axios'
         });
       },
       submit() {
-        axios.post()
-        console.log(this.like_check);
+        /* 적용 */
       }
     },
     created() {
