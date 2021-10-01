@@ -95,7 +95,7 @@ import axios from 'axios'
     }),
     methods : {
       getMine() {
-        axios.get('/menu/userinfo?name='+this.name).then(res =>{
+        axios.get('/menus/userinfo?name='+this.name).then(res =>{
           /* 음식 이름 */
           this.likes = new Array
           this.dislikes = new Array
@@ -115,11 +115,26 @@ import axios from 'axios'
         });
       },
       submit() {
-        /* 적용 */
+        axios.post('/menus/modify', {
+          name: this.name,
+          like_check: this.like_check,
+          dislike_check: this.dislike_check
+        }).then(res=>{
+          if(res.status==200){
+            alert("적용 완료");
+          }
+          else {
+            alert("적용 실패");
+          }
+          this.$router.go();
+          console.log(res);
+        }).catch(e=>{
+          console.log(e);
+        })
       }
     },
     created() {
-      axios.get('/menu').then(res => {
+      axios.get('/menus').then(res => {
         for(let i=0; i<res.data.length; i++){
           this.items.push(res.data[i]);
         }
