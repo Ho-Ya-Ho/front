@@ -93,6 +93,7 @@ import axios from 'axios'
       mine: [],
       checked : []
     }),
+
     methods : {
       getMine() {
         axios.get('/menus/userinfo?name='+this.name).then(res =>{
@@ -114,6 +115,7 @@ import axios from 'axios'
           }
         });
       },
+
       submit() {
         axios.post('/menus/modify', {
           name: this.name,
@@ -133,6 +135,7 @@ import axios from 'axios'
         })
       }
     },
+
     created() {
       axios.get('/menus').then(res => {
         for(let i=0; i<res.data.length; i++){
@@ -145,3 +148,5 @@ import axios from 'axios'
 
   }
 </script>
+
+
